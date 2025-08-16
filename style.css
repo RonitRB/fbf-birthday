@@ -795,3 +795,63 @@ body {
 
 
 }
+
+/* ---------------------------
+   Floating music control styles
+   --------------------------- */
+
+#musicControl {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ff4d6d;
+    color: white;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 10000;
+}
+
+/* hover / feedback */
+#musicControl:hover {
+    transform: scale(1.08);
+    background: #ff1e50;
+}
+
+/* visual playing state — subtle glow */
+#musicControl.playing {
+    box-shadow: 0 6px 18px rgba(255, 77, 109, 0.45), 0 0 8px rgba(255, 77, 109, 0.25) inset;
+    animation: musicPulse 1.8s infinite;
+}
+
+/* a soft pulse while playing */
+@keyframes musicPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+/* ensure the icon does not capture pointer events (parent handles clicks) */
+#musicIcon {
+    pointer-events: none;
+    font-size: 20px;
+    line-height: 1;
+}
+
+/* small responsive tweak */
+@media screen and (max-width: 480px) {
+    #musicControl {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+        bottom: 14px;
+        right: 14px;
+    }
+}

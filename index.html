@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Happy Birthday Website 2.0 | Aoudumber Bade">
-    <meta name="github" content="https://github.com/Aoudumber-Bade">
-    <title>HBD 2.0 | Aoudumber Bade</title>
+    <title>HBD Rashi</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -45,7 +41,7 @@
                 </div>
                 <div class="btn">
                     <button id="btn__letter">
-                        Click here Rashmii
+                        Click here Rashii
                         <i class="fa-regular fa-envelope"></i>
                     </button>
                 </div>
@@ -57,7 +53,7 @@
                     </div>
                     <div class="name">
                         <i class="fa-solid fa-heart"></i>
-                        <span>Rashmiiii</span>
+                        <span>Rashiiii</span>
                         <i class="fa-solid fa-heart"></i>
                     </div>
                     <div class="balloon_one">
@@ -110,8 +106,6 @@
             <img src="./images/smiley_icon.png" alt="" width="100">
         </div>
 
-        
-
         <div class="box__letter">
             <div class="letter__border">
                 <div class="letter">
@@ -145,12 +139,21 @@
 
     <div id="copy">
 		<p class="text-center text-white text-sm">OG Creator <a
-			href="https://www.instagram.com/aoudumber.dev/reels/#">@aoudumber.dev</a></p>
+			href="https://github.com/RonitRB">@RonitRB</a></p>
 	  </div>
+
+    <!-- AUDIO: place your file at ./music/hbd-song.mp3 -->
+    <audio id="hbdSong" src="./music/hbd-song.mp3" loop preload="auto"></audio>
+
+    <!-- Floating music control -->
+    <div id="musicControl" aria-label="Music control" title="Play / Pause">
+        <i id="musicIcon" class="fa-solid fa-music"></i>
+    </div>
+
 </body>
 <script>
-    let datetxt = "5 April 1996";
-    let datatxtletter = "My love. You are a very special girl. I always silently thank you for coming into my life. Today, I wish you all the best, lots of health, and lots of joy. I always hope we will celebrate many more birthdays like this together. Happy birthday to you.💕";
+    let datetxt = "16th AUGUST 2004";
+    let datatxtletter = "Hey Drama Queen!! You are a very special girl. I always silently thank you for coming into my life. Today, I wish you all the best, lots of health, and lots of joy. I always hope we will celebrate many more birthdays like this together. Happy birthday to you.💕";
     let titleLetter = "To you";
     let charArrDate = datetxt.split('');
     let charArrDateLetter = datatxtletter.split('');
@@ -178,7 +181,43 @@
 
     var intervalContent;
     var intervalTitle;
+
+    // get audio and music control elements
+    const song = document.getElementById("hbdSong");
+    const musicControl = document.getElementById("musicControl");
+    const musicIcon = document.getElementById("musicIcon");
+
+    // Helper to set music icon state
+    function setMusicIconPlaying(isPlaying){
+        if(!musicIcon) return;
+        if(isPlaying){
+            musicIcon.classList.remove("fa-music");
+            musicIcon.classList.remove("fa-volume-xmark");
+            musicIcon.classList.add("fa-circle-play"); // visually indicates playing (fallback)
+            // you can use fa-solid fa-pause or fa-volume-high if preferred
+            musicIcon.classList.remove("fa-circle-pause");
+            // for FontAwesome versions differences, let's also add a 'playing' class for CSS glow
+            musicControl.classList.add("playing");
+        } else {
+            musicIcon.classList.remove("fa-circle-play");
+            musicIcon.classList.remove("fa-volume-xmark");
+            musicIcon.classList.add("fa-music");
+            musicControl.classList.remove("playing");
+        }
+    }
+
+    // When "Click here Rashii" is pressed
     $("#btn__letter").on("click", function(){
+        // play the song (user interaction)
+        if (song) {
+            // try to play - browsers require user gesture, this is inside click so OK
+            song.play().catch(function(e){
+                // ignore play errors (autoplay policies); user can use control
+                console.warn("Audio play prevented:", e);
+            });
+            setMusicIconPlaying(true);
+        }
+
         $(".box__letter").slideDown()
         setTimeout(function(){
             $(".letter__border").slideDown();
@@ -219,7 +258,30 @@
             },50)
         },6000)
     })
+
+    // Music control toggle (floating button)
+    if (musicControl) {
+        musicControl.addEventListener("click", function(){
+            if (!song) return;
+            if (song.paused) {
+                song.play().catch(function(e){
+                    console.warn("Audio play prevented:", e);
+                });
+                setMusicIconPlaying(true);
+            } else {
+                song.pause();
+                setMusicIconPlaying(false);
+            }
+        });
+    }
+
+    // Close letter: stop & reset music + clear intervals and animations (existing logic preserved)
     $(".close").on("click", function(){
+        if (song) {
+            song.pause();
+            song.currentTime = 0; // restart from beginning
+            setMusicIconPlaying(false);
+        }
         clearInterval(intervalContent)
         document.querySelector(".title__letter").textContent = "";
         text__letter.textContent = "";
